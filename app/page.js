@@ -9,7 +9,7 @@ export default function Home() {
 
   return (
     <div>
-      <Button onClick={() => handleClick(false)}>Test Toast</Button>
+      <Button variant="outline" onClick={() => handleClick(false)}>Test Toast</Button>
     </div >
   );
 }
