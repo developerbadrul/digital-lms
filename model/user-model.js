@@ -29,6 +29,7 @@ const userSchema = new Schema(
             type: String,
             required: true,
             enum: ["Student", "Instructor", "Admin"],
+            default: "Student",
         },
         bio: {
             type: String,
@@ -41,7 +42,7 @@ const userSchema = new Schema(
         profilePicture: { type: String, default: "" },
     },
     {
-        timestamps: true, 
+        timestamps: true,
     }
 );
 
