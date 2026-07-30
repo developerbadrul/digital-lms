@@ -1,31 +1,32 @@
 import { dbConnect } from "@/lib/dbConnect";
 import { User } from "@/model/user-model";
-
+import { leanSanitize } from "@/lib/mongo-utils"; 
 
 export default async function TestDBPage() {
     let statusMessage = "";
     let createdUser = null;
 
     try {
-        // 1. Connect to MongoDB Atlas
         await dbConnect();
 
-        // 2. Clear test user if exists, then create dummy user
         await User.deleteOne({ email: "test.student@example.com" });
 
-        createdUser = await User.create({
+        // Create document
+        const rawUser = await User.create({
             firstName: "Md",
             lastName: "Test",
             email: "test.student@example.com",
             password: "hashedpassword123",
             phone: "+8801700000000",
-            role: "Student",
             bio: "Testing Mongoose schema creation.",
             socialMedia: {
                 github: "https://github.com/test",
                 linkedin: "https://linkedin.com/in/test",
             },
         });
+
+        // 2. Convert Mongoose Doc to object & run through leanSanitize
+        createdUser = leanSanitize(rawUser.toObject());
 
         statusMessage = "✅ Successfully connected & created test user!";
     } catch (error) {
