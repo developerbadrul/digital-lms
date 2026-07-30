@@ -1,48 +1,54 @@
 import { dbConnect } from "@/lib/dbConnect";
-import { User } from "@/model/user-model";
-import { leanSanitize } from "@/lib/mongo-utils"; 
+import { Course } from "@/model/course-model";
+import { leanSanitize } from "@/lib/mongo-utils";
+import mongoose from "mongoose";
 
 export default async function TestDBPage() {
     let statusMessage = "";
-    let createdUser = null;
+    let createdCourse = null;
 
     try {
         await dbConnect();
 
-        await User.deleteOne({ email: "test.student@example.com" });
+        // Clear previous test course if exists
+        await Course.deleteOne({ title: "Next.js 16 Masterclass" });
 
-        // Create document
-        const rawUser = await User.create({
-            firstName: "Md",
-            lastName: "Test",
-            email: "test.student@example.com",
-            password: "hashedpassword123",
-            phone: "+8801700000000",
-            bio: "Testing Mongoose schema creation.",
-            socialMedia: {
-                github: "https://github.com/test",
-                linkedin: "https://linkedin.com/in/test",
-            },
+        // Dummy ObjectIds to test unpopulated FK references
+        const dummyCategoryId = new mongoose.Types.ObjectId();
+        const dummyInstructorId = new mongoose.Types.ObjectId();
+        const dummyModuleId1 = new mongoose.Types.ObjectId();
+        const dummyModuleId2 = new mongoose.Types.ObjectId();
+
+        // 2. Create Course Document
+        const rawCourse = await Course.create({
+            title: "Next.js 16 Masterclass",
+            description: "Learn App Router & Server Actions from scratch.",
+            thumbnail: "https://example.com/thumb.jpg",
+            price: 49.99,
+            active: true,
+            category: dummyCategoryId,
+            instructor: dummyInstructorId,
+            modules: [dummyModuleId1, dummyModuleId2],
+            testimonials: [],
         });
 
-        // 2. Convert Mongoose Doc to object & run through leanSanitize
-        createdUser = leanSanitize(rawUser.toObject());
+        createdCourse = leanSanitize(rawCourse.toObject());
 
-        statusMessage = "✅ Successfully connected & created test user!";
+        statusMessage = "✅ Successfully connected & created test course!";
     } catch (error) {
         statusMessage = `❌ DB Test Failed: ${error.message}`;
     }
 
     return (
         <div style={{ padding: 40, fontFamily: "sans-serif" }}>
-            <h1>MongoDB Model Tester</h1>
+            <h1>MongoDB Course Model Tester</h1>
             <p style={{ fontWeight: "bold" }}>{statusMessage}</p>
 
-            {createdUser && (
+            {createdCourse && (
                 <div>
-                    <h3>Created User Document:</h3>
+                    <h3>Created Course Document:</h3>
                     <pre style={{ background: "#f4f4f4", padding: 15, borderRadius: 5 }}>
-                        {JSON.stringify(createdUser, null, 2)}
+                        {JSON.stringify(createdCourse, null, 2)}
                     </pre>
                 </div>
             )}
