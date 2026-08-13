@@ -3,7 +3,7 @@ import mongoose, { Schema } from "mongoose";
 const testimonialSchema = new Schema({
     content: {
         type: String,
-        require: [true, "Content is required"],
+        required: [true, "Content is required"],
         trim: true
     },
     user: {
