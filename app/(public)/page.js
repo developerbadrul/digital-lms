@@ -10,7 +10,7 @@ import Link from "next/link";
 
 const HomePage = async () => {
     const courses = await getCourseList();
-    const categories = await getCategories()
+    const categories = await getCategories();
 
     return (
         <>

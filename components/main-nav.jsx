@@ -16,111 +16,90 @@ import { Logo } from "./logo";
 import { MobileNav } from "./mobile-nav";
 
 export function MainNav({ items, children }) {
-  const [showMobileMenu, setShowMobileMenu] = useState(false);
+	const [showMobileMenu, setShowMobileMenu] = useState(false);
 
-  return (
-    <div className="flex w-full items-center justify-between">
-      {/* Brand & Main Links */}
-      <div className="flex gap-6 lg:gap-10">
-        <Link href="/">
-          <Logo />
-        </Link>
-        {items?.length ? (
-          <nav className="hidden gap-6 lg:flex">
-            {items.map((item, index) => (
-              <Link
-                key={index}
-                href={item.disabled ? "#" : item.href}
-                className={cn(
-                  "flex items-center text-sm font-medium transition-colors hover:text-foreground/80"
-                )}
-              >
-                {item.title}
-              </Link>
-            ))}
-          </nav>
-        ) : null}
+	return (
+		<>
+			<div className="flex gap-6 lg:gap-10">
+				<Link href="/">
+					<Logo />
+				</Link>
+				{items?.length ? (
+					<nav className="hidden gap-6 lg:flex">
+						{items?.map((item, index) => (
+							<Link
+								key={index}
+								href={item.disabled ? "#" : item.href}
+								className={cn(
+									"flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-sm"
+								)}>
+								{item.title}
+							</Link>
+						))}
+					</nav>
+				) : null}
 
-        {showMobileMenu && items && (
-          <MobileNav items={items}>{children}</MobileNav>
-        )}
-      </div>
-
-      {/* Auth Action Buttons */}
-      <nav className="flex items-center gap-3">
-        <div className="hidden items-center gap-3 lg:flex">
-          <Link
-            href="/login"
-            className={cn(buttonVariants({ size: "sm" }), "px-4")}
-          >
-            Login
-          </Link>
-
-          {/* FIX: Standard DropdownMenuTrigger without explicit asChild conflicts */}
-          <DropdownMenu>
-            <DropdownMenuTrigger
-              className={cn(
-                buttonVariants({ variant: "outline", size: "sm" }),
-                "cursor-pointer"
-              )}
-            >
-              Register
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end" className="mt-2 w-48">
-              <DropdownMenuItem asChild>
-                <Link href="/register/student" className="w-full cursor-pointer">
-                  Student
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/register/instructor" className="w-full cursor-pointer">
-                  Instructor
-                </Link>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
-
-        {/* User Profile Avatar Menu */}
-        <DropdownMenu>
-          <DropdownMenuTrigger className="rounded-full focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2">
-            <Avatar>
-              <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
-              <AvatarFallback>CN</AvatarFallback>
-            </Avatar>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end" className="mt-2 w-56">
-            <DropdownMenuItem asChild>
-              <Link href="/account" className="w-full cursor-pointer">
-                Profile
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/account/enrolled-courses" className="w-full cursor-pointer">
-                My Courses
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem asChild>
-              <Link href="/account/certificates" className="w-full cursor-pointer">
-                Testimonials & Certificates
-              </Link>
-            </DropdownMenuItem>
-            <DropdownMenuItem className="cursor-pointer">
-              Logout
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-
-        {/* Mobile Nav Toggle */}
-        <button
-          type="button"
-          className="flex items-center space-x-2 lg:hidden"
-          onClick={() => setShowMobileMenu(!showMobileMenu)}
-          aria-label="Toggle Menu"
-        >
-          {showMobileMenu ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-        </button>
-      </nav>
-    </div>
-  );
+				{showMobileMenu && items && (
+					<MobileNav items={items}>{children}</MobileNav>
+				)}
+			</div>
+			<nav className="flex items-center gap-3">
+				<div className="items-center gap-3 hidden lg:flex">
+					<Link
+						href="/login"
+						className={cn(buttonVariants({ size: "sm" }), "px-4")}>
+						Login
+					</Link>
+					<DropdownMenu>
+						<DropdownMenuTrigger asChild>
+							<Button variant="outline" size="sm">
+								Register
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent align="end" className="w-56 mt-4">
+							<DropdownMenuItem className="cursor-pointer">
+								<Link href="">Student</Link>
+							</DropdownMenuItem>
+							<DropdownMenuItem className="cursor-pointer">
+								<Link href="">Instructor</Link>
+							</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
+				</div>
+				<DropdownMenu>
+					<DropdownMenuTrigger asChild>
+						<div className="cursor-pointer">
+							<Avatar>
+								<AvatarImage
+									src="https://github.com/shadcn.png"
+									alt="@shadcn"
+								/>
+								<AvatarFallback>CN</AvatarFallback>
+							</Avatar>
+						</div>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent align="end" className="w-56 mt-4">
+						<DropdownMenuItem className="cursor-pointer" asChild>
+							<Link href="account">Profile</Link>
+						</DropdownMenuItem>
+						<DropdownMenuItem className="cursor-pointer" asChild>
+							<Link href="account/enrolled-courses">My Courses</Link>
+						</DropdownMenuItem>
+						<DropdownMenuItem className="cursor-pointer" asChild>
+							<Link href="">Testimonials & Certificates</Link>
+						</DropdownMenuItem>
+						<DropdownMenuItem className="cursor-pointer" asChild>
+							<Link href="">Logout</Link>
+						</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
+				<button
+					className="flex items-center space-x-2 lg:hidden"
+					onClick={() => setShowMobileMenu(!showMobileMenu)}>
+					{showMobileMenu ? <X /> : <Menu />}
+				</button>
+			</nav>
+		</>
+	);
 }
+
